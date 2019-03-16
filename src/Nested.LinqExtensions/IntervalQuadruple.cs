@@ -1,6 +1,6 @@
 ﻿namespace Nested.LinqExtensions
 {
-    public class SiblingQuadruple : ISiblingQuadruple
+    public class IntervalQuadruple : ISiblingQuadruple
     {
         public long Nv { get; set; }
         public long Dv { get; set; }

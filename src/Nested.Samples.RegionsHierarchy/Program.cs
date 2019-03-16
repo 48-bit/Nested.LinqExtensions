@@ -140,7 +140,7 @@ namespace EFNested
 
             //-- nvc * dvp >= dvc * nvp && snvc * sdvp <= sdvc * snvp
             var child = regions["R2-1-1-3-1"];
-            var anclist = NestedSetHelper.BuildAncestorsList(child.TreeEntry.Nv, child.TreeEntry.Dv);
+            var anclist = NestedIntervalMath.BuildAncestorsList(child.TreeEntry.Nv, child.TreeEntry.Dv);
             //var ancestors = context.Regions.DescendantsOf(regions["R2-1-1-3"], true);
 
             var roles = new List<Role>();
