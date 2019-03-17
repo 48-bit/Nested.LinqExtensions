@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.InteropServices.ComTypes;
-using System.Security.Cryptography.X509Certificates;
 using EFNested.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -11,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nested.LinqExtensions;
 using Nested.LinqExtensions.Utils;
+using Z.EntityFramework.Plus;
 
 namespace EFNested
 {
@@ -134,25 +132,18 @@ namespace EFNested
                         ),
                         (("R2-2", "C-R2-2"), null),
                         ("R2-3", null),
-                        ("R2-4", new Regions
-                        {
-                            ("R2-4-1", null),
-                            ("R2-4-2", null),
-                            ("R2-4-3", null),
-                        })
+                        ("R2-4", null)
                     }
                 )
             }, context);
             context.SaveChanges();
 
             var srcRoot = regions["R2-1"].TreeEntry;
-            var tgtRoot = regions["R2-2"].TreeEntry;
-            var tgt = regions["R2-4-3"].TreeEntry;
-            var computed = NestedIntervalMath.GetIntervalByPath(new long[] {2, 4, 3});
+            var tgtRoot = regions["R2-4"].TreeEntry;
             var depthDiff = tgtRoot.Depth - srcRoot.Depth;
             
-            var multiplier =
-                NestedIntervalMath.BuildSubtreeRelocationMatrix(regions["R2-1"].TreeEntry, regions["R2-2"].TreeEntry);
+            var relocation =
+                NestedIntervalMath.BuildSubtreeRelocationMatrix(regions["R2-1"].TreeEntry, regions["R2-4"].TreeEntry);
 
             var oldPos = NestedIntervalMath.GetIntervalByPosition(regions["R2-1-1"].TreeEntry, 3);
             var r221 = NestedIntervalMath.GetIntervalByPosition(tgtRoot, 1);
@@ -169,11 +160,32 @@ namespace EFNested
             var pos2113 = NestedIntervalMath.GetIntervalByPath(new long[]{2, 1, 1, 3});
 
             var data = context.Regions.DescendantsOf(regions["R2-1"]).Include(i => i.TreeEntry).ToList();
+
+            long relocation00 = relocation[0,0], 
+                relocation10 = relocation[1,0], 
+                relocation01 = relocation[0, 1], 
+                relocation11 = relocation[1, 1];
+            var filtered = context.ResourcesHierarchies.Where(NestedIntervalsSpec.DescendantsOf(srcRoot, false, -1)).ToList();
+
+            var updated = context.ResourcesHierarchies.Where(NestedIntervalsSpec.DescendantsOf(srcRoot, false, -1))
+                .Update(entry =>
+                        new TreeEntry()
+                        {
+                            Nv =  relocation00 * entry.Nv + relocation01 * entry.Dv,
+                            Dv =  relocation10 * entry.Nv + relocation11 * entry.Dv,
+                            SNv = relocation00 * entry.SNv + relocation01 * entry.SDv,
+                            SDv = relocation10 * entry.SNv + relocation11 * entry.SDv,
+                            Depth = entry.Depth + depthDiff
+                        }
+                );
+            context.SaveChanges();
+            var r24Child = context.Regions.DescendantsOf(regions["R2-4"]);
+
             foreach (var region in data)
             {
                 //var desiredInterval = NestedIntervalMath.GetIntervalByPosition()
                 var updatedInterval = NestedIntervalMath.MatrixToInterval(
-                    NestedIntervalMath.MultiplyMatrix(multiplier,
+                    NestedIntervalMath.MultiplyMatrix(relocation,
                         NestedIntervalMath.IntervalToMatrix(region.TreeEntry)));
                 region.TreeEntry.Depth += depthDiff;
                 region.TreeEntry.SetFromInterval(updatedInterval);
