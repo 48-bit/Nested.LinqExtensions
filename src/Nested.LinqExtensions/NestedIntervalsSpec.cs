@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Nested.LinqExtensions.Utils;
 
 namespace Nested.LinqExtensions
 {
@@ -125,6 +126,20 @@ namespace Nested.LinqExtensions
         public static TreeFilter NthRootEntry(int n)
         {
             return RootEntries().And(r => r.Nv == n - 1);
+        }
+
+        public static TreeFilter ElementsByPositionsPath(IEnumerable<long> positionsPath)
+        {
+            TreeFilter conditions = PredicateBuilder.False<TreeEntry>();
+            IntervalQuadruple parentInterval = null;
+            foreach (var position in positionsPath)
+            {
+                var childInterval = NestedIntervalMath.GetIntervalByPosition(parentInterval, position);
+                conditions.Or(i => i.Nv == childInterval.Nv && i.Dv == childInterval.Dv);
+                parentInterval = childInterval;
+            }
+
+            return conditions;
         }
     }
 }

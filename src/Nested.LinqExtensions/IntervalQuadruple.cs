@@ -1,5 +1,8 @@
-﻿namespace Nested.LinqExtensions
+﻿using System.Diagnostics;
+
+namespace Nested.LinqExtensions
 {
+    [DebuggerDisplay("Left: {Nv}/{Dv}; Right: {SNv}/{SDv}")]
     public class IntervalQuadruple : ISiblingQuadruple
     {
         public long Nv { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using EFNested;
 using EFNested.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -49,33 +50,33 @@ namespace Nested.LinqExtensions.Tests
             //ARRANGE
             var regions  = SetupTree(context, new Regions { 
                 //Depth 1
-                (("R1", new[] {"C-R1"}), null), 
+                ("R1", null), 
                 //This creates Region with
-                //Name = "R2", list of Cities with 1 City named "C-R2" and list of child regions with same initialization
-                (("R2", new[] {"C-R2"}), new Regions { 
+                //Name = "R2" and list of child regions with same initialization
+                ("R2", new Regions { 
                         //Depth 2
-                        (("R2-1", new[] {"C-R2-1"}), new Regions { 
+                        ("R2-1", new Regions { 
                                 //Depth 3
-                                (("R2-1-1", new[] {"C-R2-1-1"}), new Regions { 
+                                ("R2-1-1", new Regions { 
                                         //Depth 4
-                                        (("R2-1-1-1", new[] {"C-R2-1-1-1"} ), new Regions { 
+                                        ("R2-1-1-1", new Regions { 
                                                 //Depth 5
-                                                (("R2-1-1-1-1", new[] {"C-R2-1-1-1-1"}), null)
+                                                ("R2-1-1-1-1", null)
                                             }
                                         ),
-                                        (("R2-1-1-2", new[] {"C-R2-1-1-2"} ), null),
-                                        (("R2-1-1-3", new[] {"C-R2-1-1-3"}), new Regions {
+                                        ("R2-1-1-2", null),
+                                        ("R2-1-1-3", new Regions {
                                                 //Depth 5
-                                                (("R2-1-1-3-1", new[] {"C-R2-1-1-3-1"}), null),
-                                                (("R2-1-1-3-2", new[] {"C-R2-1-1-3-2"}), null),
-                                                (("R2-1-1-3-3", new[] {"C-R2-1-1-3-3"}), null)
+                                                ("R2-1-1-3-1", null),
+                                                ("R2-1-1-3-2", null),
+                                                ("R2-1-1-3-3", null)
                                             }
                                         )
                                     }
                                 )
                             }
                         ),
-                        (("R2-2", "C-R2-2"), null)
+                        ("R2-2", null)
                     }
                 )
             });

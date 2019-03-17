@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Nested.LinqExtensions.Utils
 {
@@ -49,6 +51,27 @@ namespace Nested.LinqExtensions.Utils
             };
         }
 
+        public static IntervalQuadruple GetParentInterval(IntervalQuadruple element)
+        {
+            var parent = new IntervalQuadruple()
+            {
+                SNv = element.SNv - element.Nv,
+                SDv = element.SDv - element.Dv
+            };
+            parent.Nv = element.Nv % parent.SNv;
+            if (parent.SDv == 1)
+            {
+                parent.Dv = 1;
+            }
+            else
+            {
+                parent.Dv = element.Dv % parent.SDv;
+            }
+
+            parent.Depth = element.Depth - 1;
+            return parent;
+        }
+
         public static IntervalQuadruple GetIntervalByPosition(long index)
         {
             return new IntervalQuadruple()
@@ -82,6 +105,107 @@ namespace Nested.LinqExtensions.Utils
             //If entry is null return 0 which indicates index BEFORE FIRST element
             //For root entries Nv == index;
             return entry?.Nv ?? 0;
+        }
+
+        public static long[,] BuildSubtreeRelocationMatrix(
+            IntervalQuadruple sourceRoot,
+            IntervalQuadruple targetRoot)
+        {
+            var sourceParent = GetParentInterval(sourceRoot);
+            var targetParent = GetParentInterval(targetRoot);
+            var sourcePosition = GetPositionByInterval(sourceParent, sourceRoot);
+            var targetPosition = GetPositionByInterval(targetParent, targetRoot);
+
+            return MultiplyMatrix(
+                MultiplyMatrix(
+                    IntervalToMatrix(targetParent),
+                    PositionDifferenceMatrix(targetPosition, sourcePosition)),
+                IntervalToInverseMatrix(sourceParent));
+
+        }
+
+        private static long[,] PositionDifferenceMatrix(long target, long source)
+        {
+            return new long[,]
+            {
+                {1,               0}, 
+                {target - source, 1}
+            };
+
+        }
+
+        public static IntervalQuadruple GetIntervalByPath(IEnumerable<long> path)
+        {
+            var targetIntervalMatrix = new long[,]
+            {
+                {0, 1},
+                {1, 0}
+            };
+            int depth = 0;
+            foreach (var position in path)
+            {
+                depth += 1;
+                targetIntervalMatrix = MultiplyMatrix(targetIntervalMatrix, PositionMatrix(position));
+            }
+            return new TreeEntry(MatrixToInterval(targetIntervalMatrix)) {Depth = depth};
+
+        }
+
+        private static long[,] PositionMatrix(long position)
+        {
+            return new long[,]
+            {
+                { 1,        1           },
+                { position, position +1 }
+            };
+        }
+
+        public static long[,] IntervalToMatrix(IntervalQuadruple source)
+        {
+            return new long[,]
+            {
+                { source.Nv, source.SNv }, 
+                { source.Dv, source.SDv }
+            };
+        }
+
+        public static long[,] IntervalToInverseMatrix(IntervalQuadruple source)
+        {
+            return new long[,]
+            {
+                {-source.SDv, source.SNv}, 
+                {source.Dv,   -source.Nv}
+            };
+        }
+
+        public static IntervalQuadruple MatrixToInterval(long[,] source)
+        {
+            return new IntervalQuadruple()
+            {
+                Nv = source[0, 0],
+                Dv = source[1, 0],
+                SNv = source[0, 1],
+                SDv = source[1, 1]
+            };
+        }
+
+        public static long[,] MultiplyMatrix(long[,] lhv, long[,] rhv)
+        {
+            if (
+                lhv.GetLength(0) != 2 || 
+                lhv.GetLength(1) != 2 || 
+                rhv.GetLength(0) != 2 || 
+                rhv.GetLength(1) != 2)
+            {
+                throw new ArgumentException();
+            }
+
+            long[,] result =
+            {
+                {lhv[0, 0] * rhv[0, 0] + lhv[0, 1] * rhv[1, 0], lhv[0, 0] * rhv[0, 1] + lhv[0, 1] * rhv[1, 1]},
+                {lhv[1, 0] * rhv[0, 0] + lhv[1, 1] * rhv[1, 0], lhv[1, 0] * rhv[0, 1] + lhv[1, 1] * rhv[1, 1]}
+            };
+            return result;
         }
     }
 }

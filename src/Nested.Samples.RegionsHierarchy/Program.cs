@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices.ComTypes;
+using System.Security.Cryptography.X509Certificates;
 using EFNested.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -85,7 +86,8 @@ namespace EFNested
             }
 
             List<Region> regionsFlat = new List<Region>();
-            Visitor(regionsTree.Cast<EntityTree<Region>>().ToList(), null, (tree, parent) => context.Regions.AddNextChild(parent, tree.Item));
+            Visitor(regionsTree.Cast<EntityTree<Region>>().ToList(), null, (tree, parent) => 
+                context.Regions.AddNextChild(parent, tree.Item));
             Visitor(regionsTree.Cast<EntityTree<Region>>().ToList(), null, (tree, region) => regionsFlat.Add(tree.Item));
 
             return regionsFlat.ToDictionary(r => r.Name, r => r);
@@ -100,7 +102,6 @@ namespace EFNested
             context.Database.Migrate();
             context.Regions.RemoveRange(context.Regions);
             context.ResourcesHierarchies.RemoveRange(context.ResourcesHierarchies);
-
             context.SaveChanges();
 
             var regions = SetupTree(new Regions { 
@@ -131,13 +132,56 @@ namespace EFNested
                                 )
                             }
                         ),
-                        (("R2-2", "C-R2-2"), null)
+                        (("R2-2", "C-R2-2"), null),
+                        ("R2-3", null),
+                        ("R2-4", new Regions
+                        {
+                            ("R2-4-1", null),
+                            ("R2-4-2", null),
+                            ("R2-4-3", null),
+                        })
                     }
                 )
             }, context);
+            context.SaveChanges();
+
+            var srcRoot = regions["R2-1"].TreeEntry;
+            var tgtRoot = regions["R2-2"].TreeEntry;
+            var tgt = regions["R2-4-3"].TreeEntry;
+            var computed = NestedIntervalMath.GetIntervalByPath(new long[] {2, 4, 3});
+            var depthDiff = tgtRoot.Depth - srcRoot.Depth;
+            
+            var multiplier =
+                NestedIntervalMath.BuildSubtreeRelocationMatrix(regions["R2-1"].TreeEntry, regions["R2-2"].TreeEntry);
+
+            var oldPos = NestedIntervalMath.GetIntervalByPosition(regions["R2-1-1"].TreeEntry, 3);
+            var r221 = NestedIntervalMath.GetIntervalByPosition(tgtRoot, 1);
+            var r2211 = NestedIntervalMath.GetIntervalByPosition(r221, 1);
+            var r22111 = NestedIntervalMath.GetIntervalByPosition(r2211, 1);
+            var r2212 = NestedIntervalMath.GetIntervalByPosition(r221, 2);
+            var r2213 = NestedIntervalMath.GetIntervalByPosition(r221, 3);
+            var r22131 = NestedIntervalMath.GetIntervalByPosition(r2213, 1);
+            var r22132 = NestedIntervalMath.GetIntervalByPosition(r2213, 2);
+            var r22133 = NestedIntervalMath.GetIntervalByPosition(r2213, 3);
+
+            var testPositon = NestedIntervalMath.GetIntervalByPath(new long[] {2, 2, 1, 3, 3});
+            var pos2213 = NestedIntervalMath.GetIntervalByPath(new long[] {2, 2, 1, 3});
+            var pos2113 = NestedIntervalMath.GetIntervalByPath(new long[]{2, 1, 1, 3});
+
+            var data = context.Regions.DescendantsOf(regions["R2-1"]).Include(i => i.TreeEntry).ToList();
+            foreach (var region in data)
+            {
+                //var desiredInterval = NestedIntervalMath.GetIntervalByPosition()
+                var updatedInterval = NestedIntervalMath.MatrixToInterval(
+                    NestedIntervalMath.MultiplyMatrix(multiplier,
+                        NestedIntervalMath.IntervalToMatrix(region.TreeEntry)));
+                region.TreeEntry.Depth += depthDiff;
+                region.TreeEntry.SetFromInterval(updatedInterval);
+            }
 
             context.SaveChanges();
 
+            var upd = context.Regions.DescendantsOf(regions["R2-2"]);
             //-- nvc * dvp >= dvc * nvp && snvc * sdvp <= sdvc * snvp
             var child = regions["R2-1-1-3-1"];
             var anclist = NestedIntervalMath.BuildAncestorsList(child.TreeEntry.Nv, child.TreeEntry.Dv);

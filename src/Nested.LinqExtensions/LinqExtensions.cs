@@ -117,20 +117,20 @@ namespace Nested.LinqExtensions
             where TResult : IHasTreeEntry
             where TFilter : IHasTreeEntry
         {
-            return collection.ChildrenOf(item).FirstOrDefault();
+            return collection.ChildrenOf(item).OrderBy(i => i.TreeEntry.Nv).FirstOrDefault();
         }
 
         public static TResult LastChildOrDefault<TResult, TFilter>(this IQueryable<TResult> collection, TFilter item)
             where TResult : IHasTreeEntry
             where TFilter : IHasTreeEntry
         {
-            return collection.ChildrenOf(item).LastOrDefault();
+            return collection.ChildrenOf(item).OrderBy(i => i.TreeEntry.Nv).LastOrDefault();
         }
 
         public static TResult FirstRootOrDefault<TResult>(this IQueryable<TResult> collection)
             where TResult : IHasTreeEntry
         {
-            return collection.Where(c => c.TreeEntry, NestedIntervalsSpec.FirstRootEntry()).First();
+            return collection.Where(c => c.TreeEntry, NestedIntervalsSpec.FirstRootEntry()).OrderBy(i => i.TreeEntry.Nv).FirstOrDefault();
         }
 
         public static TResult LastRootOrDefault<TResult>(this IQueryable<TResult> collection)
@@ -140,6 +140,15 @@ namespace Nested.LinqExtensions
                 .Where(c => c.TreeEntry, NestedIntervalsSpec.RootEntries())
                 .OrderByDescending(i => i.TreeEntry.Nv)
                 .FirstOrDefault();
+        }
+
+        public static IQueryable<TResult> ByPositionsPath<TResult>(this IQueryable<TResult> collection,
+            IEnumerable<long> positionsPath)
+        where TResult: IHasTreeEntry
+        {
+            return collection
+                .Where((i) => i.TreeEntry, NestedIntervalsSpec.ElementsByPositionsPath(positionsPath))
+                .OrderBy(i => i.TreeEntry.Nv);
         }
 
         public static IQueryable<T1> Where<T1, T2>(this IQueryable<T1> collection, Expression<Func<T1, T2>> propertySelector,
