@@ -138,59 +138,8 @@ namespace EFNested
             }, context);
             context.SaveChanges();
 
-            var srcRoot = regions["R2-1"].TreeEntry;
-            var tgtRoot = regions["R2-4"].TreeEntry;
-            var depthDiff = tgtRoot.Depth - srcRoot.Depth;
-            
-            var relocation =
-                NestedIntervalMath.BuildSubtreeRelocationMatrix(regions["R2-1"].TreeEntry, regions["R2-4"].TreeEntry);
-
-            var oldPos = NestedIntervalMath.GetIntervalByPosition(regions["R2-1-1"].TreeEntry, 3);
-            var r221 = NestedIntervalMath.GetIntervalByPosition(tgtRoot, 1);
-            var r2211 = NestedIntervalMath.GetIntervalByPosition(r221, 1);
-            var r22111 = NestedIntervalMath.GetIntervalByPosition(r2211, 1);
-            var r2212 = NestedIntervalMath.GetIntervalByPosition(r221, 2);
-            var r2213 = NestedIntervalMath.GetIntervalByPosition(r221, 3);
-            var r22131 = NestedIntervalMath.GetIntervalByPosition(r2213, 1);
-            var r22132 = NestedIntervalMath.GetIntervalByPosition(r2213, 2);
-            var r22133 = NestedIntervalMath.GetIntervalByPosition(r2213, 3);
-
-            var testPositon = NestedIntervalMath.GetIntervalByPath(new long[] {2, 2, 1, 3, 3});
-            var pos2213 = NestedIntervalMath.GetIntervalByPath(new long[] {2, 2, 1, 3});
-            var pos2113 = NestedIntervalMath.GetIntervalByPath(new long[]{2, 1, 1, 3});
-
-            var data = context.Regions.DescendantsOf(regions["R2-1"]).Include(i => i.TreeEntry).ToList();
-
-            long relocation00 = relocation[0,0], 
-                relocation10 = relocation[1,0], 
-                relocation01 = relocation[0, 1], 
-                relocation11 = relocation[1, 1];
-            var filtered = context.ResourcesHierarchies.Where(NestedIntervalsSpec.DescendantsOf(srcRoot, false, -1)).ToList();
-
-            var updated = context.ResourcesHierarchies.Where(NestedIntervalsSpec.DescendantsOf(srcRoot, false, -1))
-                .Update(entry =>
-                        new TreeEntry()
-                        {
-                            Nv =  relocation00 * entry.Nv + relocation01 * entry.Dv,
-                            Dv =  relocation10 * entry.Nv + relocation11 * entry.Dv,
-                            SNv = relocation00 * entry.SNv + relocation01 * entry.SDv,
-                            SDv = relocation10 * entry.SNv + relocation11 * entry.SDv,
-                            Depth = entry.Depth + depthDiff
-                        }
-                );
-            context.SaveChanges();
-            var r24Child = context.Regions.DescendantsOf(regions["R2-4"]);
-
-            foreach (var region in data)
-            {
-                //var desiredInterval = NestedIntervalMath.GetIntervalByPosition()
-                var updatedInterval = NestedIntervalMath.MatrixToInterval(
-                    NestedIntervalMath.MultiplyMatrix(relocation,
-                        NestedIntervalMath.IntervalToMatrix(region.TreeEntry)));
-                region.TreeEntry.Depth += depthDiff;
-                region.TreeEntry.SetFromInterval(updatedInterval);
-            }
-
+            var itemsMoved = context.Regions.MoveSubtree(regions["R2-1"], regions["R2-4"]);
+            context.ResourcesHierarchies.AttachRange(itemsMoved);
             context.SaveChanges();
 
             var upd = context.Regions.DescendantsOf(regions["R2-2"]);

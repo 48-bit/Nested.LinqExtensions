@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Internal;
 using Nested.LinqExtensions.Utils;
 
 namespace Nested.LinqExtensions
@@ -52,9 +55,7 @@ namespace Nested.LinqExtensions
             TreeEntry parentEntry = null;
             if (parent != null)
             {
-                parentEntry = parent.TreeEntry ?? 
-                                  collection.Include(i => i.TreeEntry)
-                                      .First(i => i.TreeEntryId == parent.TreeEntryId).TreeEntry;
+                parentEntry = collection.EnsureTreeEntryLoaded(parent);
             }
             var lastInterval = GetLastInsertedChildInterval(collection, true, parent);
 
@@ -63,7 +64,44 @@ namespace Nested.LinqExtensions
             var treeEntry = new TreeEntry(NestedIntervalMath.GetIntervalByPosition(parentEntry, nextPosition));
             item.TreeEntry = treeEntry;
 
-            return collection.Add(item);
+            var state = collection.Add(item);
+            return state;
+        }
+
+        private static TreeEntry EnsureTreeEntryLoaded<T>(this DbSet<T> collection, T item)
+            where T : class, IHasTreeEntry
+        {
+            if (item.TreeEntry != null) return item.TreeEntry;
+            return collection
+                .Include(i => i.TreeEntry)
+                .First(i => i.TreeEntryId == item.TreeEntryId)
+                .TreeEntry;
+
+        }
+
+        public static IEnumerable<TreeEntry> MoveSubtree<T>(this DbSet<T> collection, T from, T to)
+            where T : class, IHasTreeEntry
+        {
+            var sourceInterval = collection.EnsureTreeEntryLoaded(from);
+            var targetInterval = collection.EnsureTreeEntryLoaded(to);
+
+            var relocation =
+                NestedIntervalMath.BuildSubtreeRelocationMatrix(sourceInterval, targetInterval);
+
+            var depthDiff = targetInterval.Depth - sourceInterval.Depth;
+
+            var intervalsToUpdate = collection.Include(i => i.TreeEntry)
+                .DescendantsOf(from)
+                .Select(i => i.TreeEntry)
+                .ToList();
+
+            foreach (var treeEntry in intervalsToUpdate)
+            {
+                treeEntry.SetFromInterval(NestedIntervalMath.MultiplyMatrixToInterval(relocation, treeEntry));
+                treeEntry.Depth += depthDiff;
+            }
+
+            return intervalsToUpdate;
         }
     }
 }

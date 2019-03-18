@@ -124,6 +124,17 @@ namespace Nested.LinqExtensions.Utils
 
         }
 
+        public static IntervalQuadruple MultiplyMatrixToInterval(long[,] matrix, IntervalQuadruple target)
+        {
+            return new IntervalQuadruple()
+            {
+                Nv = matrix[0, 0] * target.Nv + matrix[0, 1] * target.Dv,
+                Dv = matrix[1, 0] * target.Nv + matrix[1, 1] * target.Dv,
+                SNv = matrix[0, 0] * target.SNv + matrix[0, 1] * target.SDv,
+                SDv = matrix[1, 0] * target.SNv + matrix[1, 1] * target.SDv,
+            };
+        }
+
         private static long[,] PositionDifferenceMatrix(long target, long source)
         {
             return new long[,]
