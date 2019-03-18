@@ -139,7 +139,14 @@ namespace EFNested
             context.SaveChanges();
 
             var itemsMoved = context.Regions.MoveSubtree(regions["R2-1"], regions["R2-4"]);
-            context.ResourcesHierarchies.AttachRange(itemsMoved);
+            foreach (var dbEntityEntry in context.ChangeTracker.Entries<TreeEntry>().ToList())
+            {
+                if (dbEntityEntry.Entity != null)
+                {
+                    dbEntityEntry.State = EntityState.Detached;
+                }
+            }
+            context.ResourcesHierarchies.UpdateRange(itemsMoved);
             context.SaveChanges();
 
             var upd = context.Regions.DescendantsOf(regions["R2-2"]);
