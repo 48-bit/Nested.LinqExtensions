@@ -25,7 +25,5 @@ namespace Nested.LinqExtensions
             this.SNv = source.SNv;
             this.SDv = source.SDv;
         }
-
-        public long Id { get; set; }
     }
 }

@@ -65,6 +65,7 @@ namespace Nested.LinqExtensions
             item.TreeEntry = treeEntry;
 
             var state = collection.Add(item);
+            state.Reference(i => i.TreeEntry).EntityEntry.State = EntityState.Detached;
             return state;
         }
 
@@ -90,16 +91,21 @@ namespace Nested.LinqExtensions
 
             var depthDiff = targetInterval.Depth - sourceInterval.Depth;
 
-            var intervalsToUpdate = collection.Include(i => i.TreeEntry)
+            var elementsToUpdate = collection.Include(i => i.TreeEntry)
                 .DescendantsOf(from)
+                .ToList();
+
+            var intervalsToUpdate = elementsToUpdate
                 .Select(i => i.TreeEntry)
                 .ToList();
 
-            foreach (var treeEntry in intervalsToUpdate)
+            foreach (var item in elementsToUpdate)
             {
-                treeEntry.SetFromInterval(NestedIntervalMath.MultiplyMatrixToInterval(relocation, treeEntry));
-                treeEntry.Depth += depthDiff;
+                item.TreeEntry.SetFromInterval(NestedIntervalMath.MultiplyMatrixToInterval(relocation, item.TreeEntry));
+                item.TreeEntry.Depth += depthDiff;
             }
+
+            collection.UpdateRange(elementsToUpdate);
 
             return intervalsToUpdate;
         }

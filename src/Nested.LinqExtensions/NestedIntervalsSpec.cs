@@ -70,7 +70,7 @@ namespace Nested.LinqExtensions
             TreeFilter result = r => r.SNv - r.Nv == item.SNv - item.Nv && r.SDv - r.Dv == item.SDv - item.Dv;
             if (!includeSelf)
             {
-                result = result.And(r => r.Id != item.Id);
+                result = result.And(r => r.Nv != item.Nv);
             }
 
             return result;
