@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Nested.LinqExtensions.Utils
 {
+    /// <summary>
+    /// Helper functions to work with Nested intervals, Dan Hazel's encoding. 
+    /// </summary>
     public static class NestedIntervalMath
     {
         public static List<(long nv, long dv)> BuildAncestorsList(long nv, long dv)
