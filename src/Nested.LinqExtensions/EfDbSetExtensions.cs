@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Internal;
 using Nested.LinqExtensions.Utils;
 
 namespace Nested.LinqExtensions
 {
     public static class EfDbSetExtensions
     {
-        private static TreeEntry GetLastInsertedRootInterval<T>(DbSet<T> collection, bool includeLocal) 
+        private static TreeEntry GetLastInsertedRootInterval<T>(DbSet<T> collection, bool includeLocal)
             where  T: class, IHasTreeEntry
         {
             var lastRootDb = collection.Include(i => i.TreeEntry).LastRootOrDefault();
@@ -25,7 +22,7 @@ namespace Nested.LinqExtensions
 
         }
 
-        private static IntervalQuadruple GetLastInsertedChildInterval<T>(DbSet<T> collection, bool includeLocal, T parent) 
+        private static IntervalQuadruple GetLastInsertedChildInterval<T>(DbSet<T> collection, bool includeLocal, T parent)
             where T: class, IHasTreeEntry
         {
             if (parent == null)

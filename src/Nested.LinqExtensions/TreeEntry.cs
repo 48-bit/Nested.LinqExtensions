@@ -9,6 +9,8 @@ namespace Nested.LinqExtensions
         {
         }
 
+        public long Id { get; set; }
+
         public TreeEntry(IntervalQuadruple bounds)
         {
             this.Depth = bounds.Depth;

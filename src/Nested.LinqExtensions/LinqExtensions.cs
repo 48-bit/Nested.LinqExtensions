@@ -7,19 +7,19 @@ namespace Nested.LinqExtensions
 {
     public static class LinqExtensions
     {
-        
+
         public static IQueryable<TSource> AncestorsOf<TSource, TFilter>(
-            this IQueryable<TSource> collection, 
-            Expression<Func<TSource, IHasTreeEntry>> navigateExpr, 
-            TFilter item, 
-            int depth=-1, 
-            bool includeSelf = false) 
+            this IQueryable<TSource> collection,
+            Expression<Func<TSource, IHasTreeEntry>> navigateExpr,
+            TFilter item,
+            int depth=-1,
+            bool includeSelf = false)
             where TFilter: IHasTreeEntry
         {
             return collection.Where(navigateExpr.Navigate(i => i.TreeEntry), NestedIntervalsSpec.AncestorsOf(item, depth, includeSelf));
         }
 
-        public static IQueryable<TResult> AncestorsOf<TResult, TFilter>(this IQueryable<TResult> collection, TFilter item, int depth=-1, bool includeSelf = false) 
+        public static IQueryable<TResult> AncestorsOf<TResult, TFilter>(this IQueryable<TResult> collection, TFilter item, int depth=-1, bool includeSelf = false)
             where TResult : IHasTreeEntry
             where TFilter: IHasTreeEntry
         {
@@ -31,7 +31,7 @@ namespace Nested.LinqExtensions
             where TFilter: IHasTreeEntry
 
         {
-            return collection.Where(i => i.TreeEntry, NestedIntervalsSpec.DescendantsOf(item, includeSelf, depth));
+            return collection.Where(i => i.TreeEntry, NestedIntervalsSpec.DescendantsOf(item, depth, includeSelf));
         }
 
         public static IQueryable<TResult> DescendantsOfAny<TResult, TFilter>(this IQueryable<TResult> collection, IEnumerable<TFilter> items,
@@ -39,7 +39,7 @@ namespace Nested.LinqExtensions
             where TResult : IHasTreeEntry
             where TFilter : IHasTreeEntry
         {
-            return collection.Where(i => i.TreeEntry, NestedIntervalsSpec.DescendantsOfAny(items, includeSelf, depth));
+            return collection.Where(i => i.TreeEntry, NestedIntervalsSpec.DescendantsOfAll(items, depth, includeSelf));
         }
         public static IQueryable<TSource> DescendantsOfAny<TSource, TFilter>(
             this IQueryable<TSource> collection,
@@ -48,7 +48,7 @@ namespace Nested.LinqExtensions
             bool includeSelf = false, int depth = -1)
             where TFilter : IHasTreeEntry
         {
-            return collection.Where(navigateExpr.Navigate(i => i.TreeEntry), NestedIntervalsSpec.DescendantsOfAny(items, includeSelf, depth));
+            return collection.Where(navigateExpr.Navigate(i => i.TreeEntry), NestedIntervalsSpec.DescendantsOfAll(items, depth, includeSelf));
         }
 
         public static TResult ParentOf<TResult, TFilter>(this IQueryable<TResult> collection, TFilter item)

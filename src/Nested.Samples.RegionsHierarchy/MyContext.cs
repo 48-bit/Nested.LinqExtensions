@@ -22,7 +22,6 @@ namespace EFNested
             modelBuilder.ApplyConfiguration(new RegionConfiguration());
             modelBuilder.ApplyConfiguration(new PermissionConfiguration());
             modelBuilder.ApplyConfiguration(new RolesConfiguration());
-            
         }
 
         public DbSet<TreeEntry> ResourcesHierarchies { get; set; }

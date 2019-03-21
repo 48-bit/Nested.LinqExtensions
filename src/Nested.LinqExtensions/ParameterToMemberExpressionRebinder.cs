@@ -8,7 +8,7 @@ namespace Nested.LinqExtensions
         ParameterExpression _paramExpr;
         MemberExpression _memberExpr;
 
-        ParameterToMemberExpressionRebinder(ParameterExpression paramExpr, MemberExpression memberExpr) 
+        ParameterToMemberExpressionRebinder(ParameterExpression paramExpr, MemberExpression memberExpr)
         {
             _paramExpr = paramExpr;
             _memberExpr = memberExpr;

@@ -13,14 +13,14 @@ namespace Nested.LinqExtensions.Utils
             long num = nv, denum = dv, ancnv = 0, ancdv = 1, ancsnv = 1, ancsdv = 0;
             while (num > 0 && denum > 0)
             {
-                var div = num / denum; 
-                var mod = num % denum; 
-                ancnv += div * ancsnv; 
-                ancdv += div * ancsdv; 
-                ancsnv += ancnv; 
-                ancsdv += ancdv; 
+                var div = num / denum;
+                var mod = num % denum;
+                ancnv += div * ancsnv;
+                ancdv += div * ancsdv;
+                ancsnv += ancnv;
+                ancsdv += ancdv;
                 result.Add((ancnv, ancdv));
-                num = mod; 
+                num = mod;
                 if (num != 0)
                 {
                     denum %= mod;
@@ -96,7 +96,7 @@ namespace Nested.LinqExtensions.Utils
             {
                 return GetPositionByInterval(entry);
             }
-            
+
             return (entry.Nv - parent.Nv) / parent.SNv;
         }
 
@@ -139,7 +139,7 @@ namespace Nested.LinqExtensions.Utils
         {
             return new long[,]
             {
-                {1,               0}, 
+                {1,               0},
                 {target - source, 1}
             };
 
@@ -175,7 +175,7 @@ namespace Nested.LinqExtensions.Utils
         {
             return new long[,]
             {
-                { source.Nv, source.SNv }, 
+                { source.Nv, source.SNv },
                 { source.Dv, source.SDv }
             };
         }
@@ -184,7 +184,7 @@ namespace Nested.LinqExtensions.Utils
         {
             return new long[,]
             {
-                {-source.SDv, source.SNv}, 
+                {-source.SDv, source.SNv},
                 {source.Dv,   -source.Nv}
             };
         }
@@ -203,9 +203,9 @@ namespace Nested.LinqExtensions.Utils
         public static long[,] MultiplyMatrix(long[,] lhv, long[,] rhv)
         {
             if (
-                lhv.GetLength(0) != 2 || 
-                lhv.GetLength(1) != 2 || 
-                rhv.GetLength(0) != 2 || 
+                lhv.GetLength(0) != 2 ||
+                lhv.GetLength(1) != 2 ||
+                rhv.GetLength(0) != 2 ||
                 rhv.GetLength(1) != 2)
             {
                 throw new ArgumentException();
