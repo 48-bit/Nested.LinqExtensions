@@ -48,7 +48,7 @@ namespace Nested.LinqExtensions.Utils
         /// <param name="parent">parent item's tree entry interval. </param>
         /// <param name="index">Item's position relative to parent. </param>
         /// <returns>Tree entry interval values for an item. </returns>
-        public static ISiblingQuadruple GetIntervalByPosition(ISiblingQuadruple parent, long index)
+        public static IIntervalQuadruple GetIntervalByPosition(IIntervalQuadruple parent, long index)
         {
             // returning intervals for root entry if parent is null
             if (parent == null)
@@ -71,7 +71,7 @@ namespace Nested.LinqExtensions.Utils
         /// </summary>
         /// <param name="element">Tree entry interval values. </param>
         /// <returns>Tree Entry Parent interval values. </returns>
-        public static ISiblingQuadruple GetParentInterval(ISiblingQuadruple element)
+        public static IIntervalQuadruple GetParentInterval(IIntervalQuadruple element)
         {
             var parent = new IntervalQuadruple()
             {
@@ -97,7 +97,7 @@ namespace Nested.LinqExtensions.Utils
         /// </summary>
         /// <param name="index">Item's position relative to parent. </param>
         /// <returns>Tree entry interval values for an item. </returns>
-        public static ISiblingQuadruple GetIntervalByPosition(long index)
+        public static IIntervalQuadruple GetIntervalByPosition(long index)
         {
             return new IntervalQuadruple()
             {
@@ -117,7 +117,7 @@ namespace Nested.LinqExtensions.Utils
         /// </example>
         /// <param name="path">Elements positions path relative to it's parent. Position indexes starting from 1.</param>
         /// <returns>Tree Entry interval by it's positions path. </returns>
-        public static ISiblingQuadruple GetIntervalByPath(IEnumerable<long> path)
+        public static IIntervalQuadruple GetIntervalByPath(IEnumerable<long> path)
         {
             var targetIntervalMatrix = new long[,]
             {
@@ -145,7 +145,7 @@ namespace Nested.LinqExtensions.Utils
         /// <param name="parent">Tree entry parent interval values. </param>
         /// <param name="entry">Tree entry interval values. </param>
         /// <returns>Tree Entry position relative to it's parent. </returns>
-        public static long GetPositionByInterval(ISiblingQuadruple parent, ISiblingQuadruple entry)
+        public static long GetPositionByInterval(IIntervalQuadruple parent, IIntervalQuadruple entry)
         {
             if (entry == null)
             {
@@ -166,7 +166,7 @@ namespace Nested.LinqExtensions.Utils
         /// </summary>
         /// <param name="entry">Tree entry interval values. </param>
         /// <returns>Root Tree Entry position. </returns>
-        public static long GetPositionByInterval(ISiblingQuadruple entry)
+        public static long GetPositionByInterval(IIntervalQuadruple entry)
         {
             // Dv is always 1 for root entries.
             if (entry != null && entry.Dv != 1)
@@ -185,7 +185,7 @@ namespace Nested.LinqExtensions.Utils
         /// <param name="sourceRoot">Tree entry to move descendants from. </param>
         /// <param name="targetRoot">Tree entry to move descendants into. </param>
         /// <returns>Matrix containing multipliers to use for subtree relocation. </returns>
-        public static long[,] BuildSubtreeRelocationMatrix(ISiblingQuadruple sourceRoot, ISiblingQuadruple targetRoot)
+        public static long[,] BuildSubtreeRelocationMatrix(IIntervalQuadruple sourceRoot, IIntervalQuadruple targetRoot)
         {
             var sourceParent = GetParentInterval(sourceRoot);
             var targetParent = GetParentInterval(targetRoot);
@@ -205,7 +205,7 @@ namespace Nested.LinqExtensions.Utils
         /// <param name="matrix">2x2 Matrix to multiply.</param>
         /// <param name="target">Tree entry interval values. </param>
         /// <returns>Tree entry interval values multiplied with given matrix. </returns>
-        public static ISiblingQuadruple MultiplyMatrixToInterval(long[,] matrix, ISiblingQuadruple target)
+        public static IIntervalQuadruple MultiplyMatrixToInterval(long[,] matrix, IIntervalQuadruple target)
         {
             return new IntervalQuadruple()
             {
@@ -242,7 +242,7 @@ namespace Nested.LinqExtensions.Utils
             };
         }
 
-        private static long[,] IntervalToMatrix(ISiblingQuadruple source)
+        private static long[,] IntervalToMatrix(IIntervalQuadruple source)
         {
             return new long[,]
             {
@@ -255,7 +255,7 @@ namespace Nested.LinqExtensions.Utils
             };
         }
 
-        private static long[,] IntervalToInverseMatrix(ISiblingQuadruple source)
+        private static long[,] IntervalToInverseMatrix(IIntervalQuadruple source)
         {
             return new long[,]
             {
@@ -268,7 +268,7 @@ namespace Nested.LinqExtensions.Utils
             };
         }
 
-        private static ISiblingQuadruple MatrixToInterval(long[,] source)
+        private static IIntervalQuadruple MatrixToInterval(long[,] source)
         {
             return new IntervalQuadruple()
             {

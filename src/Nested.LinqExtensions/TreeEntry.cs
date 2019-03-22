@@ -11,7 +11,7 @@ namespace Nested.LinqExtensions
 
         public long Id { get; set; }
 
-        public TreeEntry(ISiblingQuadruple bounds)
+        public TreeEntry(IIntervalQuadruple bounds)
         {
             this.Depth = bounds.Depth;
             this.Nv = bounds.Nv;
@@ -20,7 +20,7 @@ namespace Nested.LinqExtensions
             this.SDv = bounds.SDv;
         }
 
-        public void SetFromInterval(ISiblingQuadruple source)
+        public void SetFromInterval(IIntervalQuadruple source)
         {
             this.Nv = source.Nv;
             this.Dv = source.Dv;

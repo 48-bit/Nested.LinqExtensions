@@ -268,7 +268,7 @@ namespace Nested.LinqExtensions
         public static TreeFilter ElementsByPositionsPath(IEnumerable<long> positionsPath)
         {
             TreeFilter conditions = PredicateBuilder.False<TreeEntry>();
-            ISiblingQuadruple parentInterval = null;
+            IIntervalQuadruple parentInterval = null;
             foreach (var position in positionsPath)
             {
                 var childInterval = NestedIntervalMath.GetIntervalByPosition(parentInterval, position);

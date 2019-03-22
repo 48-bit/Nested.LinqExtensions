@@ -3,7 +3,7 @@
 namespace Nested.LinqExtensions
 {
     [DebuggerDisplay("Left: {Nv}/{Dv}; Right: {SNv}/{SDv}")]
-    public class IntervalQuadruple : ISiblingQuadruple
+    public class IntervalQuadruple : IIntervalQuadruple
     {
         public long Nv { get; set; }
         public long Dv { get; set; }
