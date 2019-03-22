@@ -264,11 +264,11 @@ namespace Nested.LinqExtensions
         /// For path {2, 1, 3} it will select first root item, then first child of 2nd root item, then third child of 2nd root's first child.
         /// </example>
         /// <param name="positionsPath">Elements positions path relative to it's parent. Position indexes starting from 1.</param>
-        /// <returns>Predicate selecting Nth root element. </returns>
+        /// <returns>Predicate selecting list of elements by given path. </returns>
         public static TreeFilter ElementsByPositionsPath(IEnumerable<long> positionsPath)
         {
             TreeFilter conditions = PredicateBuilder.False<TreeEntry>();
-            IntervalQuadruple parentInterval = null;
+            ISiblingQuadruple parentInterval = null;
             foreach (var position in positionsPath)
             {
                 var childInterval = NestedIntervalMath.GetIntervalByPosition(parentInterval, position);
