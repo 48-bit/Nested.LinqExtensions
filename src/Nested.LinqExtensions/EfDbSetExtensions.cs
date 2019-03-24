@@ -18,7 +18,7 @@ namespace Nested.LinqExtensions
         /// <param name="item">Element to add to hierarchy. </param>
         /// <typeparam name="T">Type of elements in collection. Should Implement IHasTreeEntry. </typeparam>
         /// <returns>Entity Framework EntityEntry object. </returns>
-        public static EntityEntry<T> AddRoot<T>(this DbSet<T> collection, T item) 
+        public static EntityEntry<T> AddRoot<T>(this DbSet<T> collection, T item)
             where T : class, IHasTreeEntry
         {
             return AddNextChild(collection, null, item);
