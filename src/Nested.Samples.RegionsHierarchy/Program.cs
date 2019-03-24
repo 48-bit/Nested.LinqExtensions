@@ -157,9 +157,9 @@ namespace EFNested
 
             var roles = new List<Role>();
 
-            var regionsDescendants = context.Regions.DescendantsOfAny(roles.SelectMany(r => r.Permissions), true);
+            var regionsDescendants = context.Regions.DescendantsOfAny(roles.SelectMany(r => r.Permissions), includeSelf: true);
 
-            var ancestors = context.Cities.DescendantsOfAny(c => c.Region, new[] {regions["R2-1-1-3-1"], regions["R2-1-1-1"],regions["R1"], regions["R2-2"]}, true);
+            var ancestors = context.Cities.DescendantsOfAny(c => c.Region, new[] {regions["R2-1-1-3-1"], regions["R2-1-1-1"],regions["R1"], regions["R2-2"]}, includeSelf: true);
 
             foreach (var ancestor in ancestors)
             {

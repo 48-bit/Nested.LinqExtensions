@@ -313,7 +313,7 @@ namespace Nested.LinqExtensions.Tests
             context.SaveChanges();
 
             //ACT
-            var collection = context.Regions.DescendantsOfAny(new[] {regions["R2-1-1-1"], regions["R2-1-1-3"]}, true).Select(r => r.Name).ToList();
+            var collection = context.Regions.DescendantsOfAny(new[] {regions["R2-1-1-1"], regions["R2-1-1-3"]}, includeSelf: true).Select(r => r.Name).ToList();
             CollectionAssert.AreEquivalent(new[] {"R2-1-1-1", "R2-1-1-3", "R2-1-1-1-1", "R2-1-1-3-1", "R2-1-1-3-2", "R2-1-1-3-3"}, collection);
         }
 
@@ -356,7 +356,7 @@ namespace Nested.LinqExtensions.Tests
             context.SaveChanges();
 
             //ACT
-            var collection = context.Regions.DescendantsOfAny(new[] {regions["R2-1-1-1"], regions["R2-1-1-3"]}, false).Select(r => r.Name).ToList();
+            var collection = context.Regions.DescendantsOfAny(new[] {regions["R2-1-1-1"], regions["R2-1-1-3"]}).Select(r => r.Name).ToList();
 
             //ASSERT
             CollectionAssert.AreEquivalent(new[] {"R2-1-1-1-1", "R2-1-1-3-1", "R2-1-1-3-2", "R2-1-1-3-3"}, collection);
