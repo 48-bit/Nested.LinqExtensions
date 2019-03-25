@@ -361,7 +361,7 @@ namespace Nested.LinqExtensions
         /// <param name="propertyPredicate">A function to test each element with condition. </param>
         /// <returns>Sequence of element filtered with given predicate. </returns>
         public static IQueryable<T1> Where<T1, T2>(
-            this IQueryable<T1> collection, 
+            this IQueryable<T1> collection,
             Expression<Func<T1, T2>> propertySelector,
             Expression<Func<T2, bool>> propertyPredicate)
         {
