@@ -256,7 +256,7 @@ namespace Nested.LinqExtensions
         {
             return RootEntries().And(r => r.Nv == n);
         }
-        
+
         /// <summary>
         /// Build predicate selecting elements by it's positions relative to parent.
         /// </summary>

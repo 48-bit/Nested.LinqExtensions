@@ -8,7 +8,6 @@ namespace Nested.LinqExtensions
     [DebuggerDisplay("Left: {Nv}/{Dv}; Right: {SNv}/{SDv}")]
     public class IntervalQuadruple : IIntervalQuadruple
     {
-
         /// <inheritdoc />
         public long Nv { get; set; }
 

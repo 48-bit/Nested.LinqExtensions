@@ -40,6 +40,7 @@ namespace Nested.LinqExtensions
             {
                 parentEntry = collection.EnsureTreeEntryLoaded(parent);
             }
+
             var lastInterval = GetLastInsertedChildInterval(collection, true, parent);
 
             var nextPosition = NestedIntervalMath.GetPositionByInterval(parentEntry, lastInterval) + 1;

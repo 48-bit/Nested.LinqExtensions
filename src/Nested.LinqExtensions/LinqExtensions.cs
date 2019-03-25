@@ -332,7 +332,7 @@ namespace Nested.LinqExtensions
         }
 
         /// <summary>
-        /// Filters a sequence of values to select elements by it's positions relative to parent. 
+        /// Filters a sequence of values to select elements by it's positions relative to parent.
         /// </summary>
         /// <example>
         /// For path {2, 1, 3} it will select 2nd root item, then first child of 2nd root item, then third child of 2nd root's first child.
