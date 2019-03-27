@@ -94,12 +94,15 @@ namespace Nested.LinqExtensions
         private static TreeEntry EnsureTreeEntryLoaded<T>(this DbSet<T> collection, T item)
             where T : class, IHasTreeEntry
         {
-            if (item.TreeEntry != null) return item.TreeEntry;
+            if (item.TreeEntry != null)
+            {
+                return item.TreeEntry;
+            }
+
             return collection
                 .Include(i => i.TreeEntry)
                 .First(i => i.TreeEntryId == item.TreeEntryId)
                 .TreeEntry;
-
         }
 
         private static TreeEntry GetLastInsertedRootInterval<T>(DbSet<T> collection, bool includeLocal)
