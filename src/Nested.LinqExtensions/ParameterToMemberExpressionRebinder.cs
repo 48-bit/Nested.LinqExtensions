@@ -10,8 +10,8 @@ namespace Nested.LinqExtensions
     /// </summary>
     public class ParameterToMemberExpressionRebinder : ExpressionVisitor
     {
-        ParameterExpression paramExpr;
-        MemberExpression memberExpr;
+        private ParameterExpression paramExpr;
+        private MemberExpression memberExpr;
 
         private ParameterToMemberExpressionRebinder(ParameterExpression paramExpr, MemberExpression memberExpr)
         {
@@ -65,6 +65,5 @@ namespace Nested.LinqExtensions
         {
             return base.Visit(p == this.paramExpr ? this.memberExpr : p);
         }
-
     }
 }

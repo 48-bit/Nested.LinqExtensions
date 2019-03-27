@@ -7,7 +7,7 @@ namespace Nested.LinqExtensions
     /// Hierarchy is defined with nested intervals encoding.
     /// </summary>
     [DebuggerDisplay("Left: {Nv}/{Dv}; Right: {SNv}/{SDv}")]
-    public class TreeEntry: IntervalQuadruple
+    public class TreeEntry : IntervalQuadruple
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeEntry"/> class.
