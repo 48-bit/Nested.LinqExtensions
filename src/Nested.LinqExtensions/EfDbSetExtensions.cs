@@ -54,7 +54,7 @@ namespace Nested.LinqExtensions
         }
 
         /// <summary>
-        /// Move descendant elements with parent node specified as 'from' to new parent node, specified as 'to'. 
+        /// Move descendant elements with parent node specified as 'from' to new parent node, specified as 'to'.
         /// </summary>
         /// <typeparam name="T">Type of elements. Should implement IHasTreeEntry interface. </typeparam>
         /// <param name="collection">Collection containing hierarchical data. </param>

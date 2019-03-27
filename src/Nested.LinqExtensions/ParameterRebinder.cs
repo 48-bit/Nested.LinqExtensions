@@ -23,7 +23,8 @@ namespace Nested.LinqExtensions
         /// source expression as keys, target expressions as values. </param>
         /// <param name="exp">parent (lambda) expression to replace parameters in it. </param>
         /// <returns>Expression with replaced parameters. </returns>
-        public static Expression ReplaceParameters(Dictionary<ParameterExpression, ParameterExpression> map,
+        public static Expression ReplaceParameters(
+            Dictionary<ParameterExpression, ParameterExpression> map,
             Expression exp)
         {
             return new ParameterRebinder(map).Visit(exp);
