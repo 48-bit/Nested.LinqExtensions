@@ -49,7 +49,8 @@ namespace Nested.LinqExtensions
             item.TreeEntry = treeEntry;
 
             var state = collection.Add(item);
-            state.Reference(i => i.TreeEntry).EntityEntry.State = EntityState.Detached;
+
+            // state.Reference(i => i.TreeEntry).EntityEntry.State = EntityState.Detached;
             return state;
         }
 

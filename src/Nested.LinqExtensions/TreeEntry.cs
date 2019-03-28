@@ -11,6 +11,13 @@ namespace Nested.LinqExtensions
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeEntry"/> class.
+        /// </summary>
+        public TreeEntry()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TreeEntry"/> class.
         /// Using bounds given by <see cref="IIntervalQuadruple"/>.
         /// </summary>
         /// <param name="bounds">left/right bounds specified as (nv/dv:snv/sdv) for nested intervals encoding. </param>
