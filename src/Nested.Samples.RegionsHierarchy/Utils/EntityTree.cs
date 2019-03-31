@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EFNested.Utils
+namespace Nested.Samples.RegionsHierarchy.Utils
 {
     public class EntityTree<T>
     {

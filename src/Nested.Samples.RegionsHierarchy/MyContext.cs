@@ -1,9 +1,9 @@
-﻿using EFNested.DBConfiguration;
-using EFNested.Utils;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Nested.LinqExtensions;
+using Nested.Samples.RegionsHierarchy.DBConfiguration;
+using Nested.Samples.RegionsHierarchy.Utils;
 
-namespace EFNested
+namespace Nested.Samples.RegionsHierarchy
 {
     public class MyContext : DbContext
     {

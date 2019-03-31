@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace EFNested.Migrations
+namespace Nested.Samples.RegionsHierarchy.Migrations
 {
     [DbContext(typeof(MyContext))]
     [Migration("20190227143645_InitialSchema")]

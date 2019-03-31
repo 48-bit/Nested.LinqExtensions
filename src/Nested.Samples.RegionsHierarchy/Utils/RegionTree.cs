@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EFNested.Utils
+namespace Nested.Samples.RegionsHierarchy.Utils
 {
     public class RegionTree : EntityTree<Region>
     {

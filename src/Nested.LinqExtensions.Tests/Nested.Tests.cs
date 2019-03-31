@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using EFNested;
-using EFNested.Utils;
 using Microsoft.EntityFrameworkCore;
 using Nested.LinqExtensions;
+using Nested.Samples.RegionsHierarchy;
+using Nested.Samples.RegionsHierarchy.Utils;
 using NUnit.Framework;
 
 namespace Nested.LinqExtensions.Tests

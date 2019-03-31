@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Nested.LinqExtensions;
 
-namespace EFNested
+namespace Nested.Samples.RegionsHierarchy
 {
     public class Region : IHasTreeEntry
     {

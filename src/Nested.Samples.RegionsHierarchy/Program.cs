@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EFNested.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nested.LinqExtensions;
 using Nested.LinqExtensions.Utils;
-using Z.EntityFramework.Plus;
+using Nested.Samples.RegionsHierarchy.Utils;
 
-namespace EFNested
+namespace Nested.Samples.RegionsHierarchy
 {
     using Regions = List<RegionTree>;   
     public class MyDesignTimeContextFactory : IDesignTimeDbContextFactory<MyContext>

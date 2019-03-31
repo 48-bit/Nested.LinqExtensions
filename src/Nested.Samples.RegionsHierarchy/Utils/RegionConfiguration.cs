@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EFNested.Utils
+namespace Nested.Samples.RegionsHierarchy.Utils
 {
     public class RegionConfiguration : IEntityTypeConfiguration<Region>
     {

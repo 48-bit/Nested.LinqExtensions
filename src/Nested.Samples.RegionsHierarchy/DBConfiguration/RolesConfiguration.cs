@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EFNested.DBConfiguration
+namespace Nested.Samples.RegionsHierarchy.DBConfiguration
 {
     public class RolesConfiguration : IEntityTypeConfiguration<Role>
     {

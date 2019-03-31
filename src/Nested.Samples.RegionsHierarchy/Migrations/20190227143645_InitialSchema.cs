@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace EFNested.Migrations
+namespace Nested.Samples.RegionsHierarchy.Migrations
 {
     public partial class InitialSchema : Migration
     {
