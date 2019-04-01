@@ -136,8 +136,13 @@ namespace Nested.Samples.RegionsHierarchy
                 )
             }, context);
             context.SaveChanges();
-
-            var itemsMoved = context.Regions.MoveSubtree(regions["R2-1"], regions["R2-4"]);
+            foreach (var region in context.ChangeTracker.Entries<Region>().ToList())
+            {
+                if (region.Entity != null)
+                {
+                    region.State = EntityState.Detached;
+                }
+            }
             foreach (var dbEntityEntry in context.ChangeTracker.Entries<TreeEntry>().ToList())
             {
                 if (dbEntityEntry.Entity != null)
@@ -145,9 +150,9 @@ namespace Nested.Samples.RegionsHierarchy
                     dbEntityEntry.State = EntityState.Detached;
                 }
             }
-            context.ResourcesHierarchies.UpdateRange(itemsMoved);
-            context.SaveChanges();
+            var itemsMoved = context.Regions.MoveSubtree(regions["R2-1"], regions["R2-4"]);
 
+            context.SaveChanges();
             var upd = context.Regions.DescendantsOf(regions["R2-2"]);
             //-- nvc * dvp >= dvc * nvp && snvc * sdvp <= sdvc * snvp
             var child = regions["R2-1-1-3-1"];
