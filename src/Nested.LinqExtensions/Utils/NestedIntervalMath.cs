@@ -176,6 +176,7 @@ namespace Nested.LinqExtensions.Utils
         /// </summary>
         /// <param name="sourceRoot">Tree entry to move descendants from. </param>
         /// <param name="targetRoot">Tree entry to move descendants into. </param>
+        /// <param name="targetPosition">position number relative to other target children. </param>
         /// <returns>Matrix containing multipliers to use for subtree relocation. </returns>
         public static long[,] BuildSubtreeRelocationMatrix(IIntervalQuadruple sourceRoot, IIntervalQuadruple targetRoot, long targetPosition)
         {

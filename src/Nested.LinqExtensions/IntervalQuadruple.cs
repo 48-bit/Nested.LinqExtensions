@@ -22,5 +22,46 @@ namespace Nested.LinqExtensions
 
         /// <inheritdoc />
         public int Depth { get; set; }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((IntervalQuadruple)obj);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = this.Nv.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.Dv.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.SNv.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.SDv.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.Depth;
+                return hashCode;
+            }
+        }
+
+        private bool Equals(IntervalQuadruple other)
+        {
+            return this.Nv == other.Nv && this.Dv == other.Dv && this.SNv == other.SNv && this.SDv == other.SDv &&
+                   this.Depth == other.Depth;
+        }
     }
 }
