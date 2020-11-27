@@ -119,15 +119,7 @@ namespace Nested.LinqExtensions.Utils
         /// <returns>Tree Entry interval by it's positions path. </returns>
         public static IIntervalQuadruple GetIntervalByPath(IEnumerable<long> path)
         {
-            var targetIntervalMatrix = new long[,]
-            {
-                {
-                    0, 1,
-                },
-                {
-                    1, 0,
-                },
-            };
+            var targetIntervalMatrix = GetIdentityMatrix();
 
             int depth = 0;
             foreach (var position in path)
@@ -185,18 +177,16 @@ namespace Nested.LinqExtensions.Utils
         /// <param name="sourceRoot">Tree entry to move descendants from. </param>
         /// <param name="targetRoot">Tree entry to move descendants into. </param>
         /// <returns>Matrix containing multipliers to use for subtree relocation. </returns>
-        public static long[,] BuildSubtreeRelocationMatrix(IIntervalQuadruple sourceRoot, IIntervalQuadruple targetRoot)
+        public static long[,] BuildSubtreeRelocationMatrix(IIntervalQuadruple sourceRoot, IIntervalQuadruple targetRoot, long targetPosition)
         {
-            var sourceParent = GetParentInterval(sourceRoot);
-            var targetParent = GetParentInterval(targetRoot);
+            var sourceParent = sourceRoot.Depth == 1 ? null : GetParentInterval(sourceRoot);
             var sourcePosition = GetPositionByInterval(sourceParent, sourceRoot);
-            var targetPosition = GetPositionByInterval(targetParent, targetRoot);
 
             return MultiplyMatrix(
                 MultiplyMatrix(
-                    IntervalToMatrix(targetParent),
+                    IntervalToMatrix(targetRoot),
                     PositionDifferenceMatrix(targetPosition, sourcePosition)),
-                IntervalToInverseMatrix(sourceParent));
+                sourceParent == null ? GetIdentityMatrix() : IntervalToInverseMatrix(sourceParent));
         }
 
         /// <summary>
@@ -215,6 +205,16 @@ namespace Nested.LinqExtensions.Utils
                 SDv = (matrix[1, 0] * target.SNv) + (matrix[1, 1] * target.SDv),
             };
         }
+
+        private static long[,] GetIdentityMatrix() => new long[,]
+        {
+            {
+                0, 1,
+            },
+            {
+                1, 0,
+            },
+        };
 
         private static long[,] PositionDifferenceMatrix(long target, long source)
         {

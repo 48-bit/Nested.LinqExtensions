@@ -69,7 +69,7 @@ namespace Nested.LinqExtensions
             var targetInterval = collection.EnsureTreeEntryLoaded(to);
 
             var relocation =
-                NestedIntervalMath.BuildSubtreeRelocationMatrix(sourceInterval, targetInterval);
+                NestedIntervalMath.BuildSubtreeRelocationMatrix(sourceInterval, targetInterval, 1);
 
             var depthDiff = targetInterval.Depth - sourceInterval.Depth;
 
